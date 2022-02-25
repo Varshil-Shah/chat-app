@@ -34,10 +34,10 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7.0),
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(20.0),
         color: purpleMaterialColor[200],
       ),
       child: TextFormField(
@@ -45,7 +45,7 @@ class InputField extends StatelessWidget {
           border: InputBorder.none,
           suffix: suffix,
           isDense: true,
-          hintText: "Enter email address",
+          hintText: hintText,
           icon: Icon(
             icon,
             color: mainColor,

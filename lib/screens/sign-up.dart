@@ -1,4 +1,4 @@
-import 'package:chat_app/widgets/auth-screen/input-field.dart';
+import 'package:chat_app/widgets/auth-screen/signup-inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/auth-screen/background.dart';
 
@@ -17,15 +17,7 @@ class SignUp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset("assets/gifs/auth.gif"),
-              InputField(
-                controller: emailController,
-                validator: (_) {
-                  return null;
-                },
-                onSaved: (_) {},
-                icon: Icons.email,
-                hintText: "Enter email address",
-              ),
+              const SignupInputs(),
             ],
           ),
         ),
