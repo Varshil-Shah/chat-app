@@ -7,7 +7,7 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -16,7 +16,18 @@ class SignUp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/gifs/auth.gif"),
+              const Text(
+                "SIGN UP",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Image.asset(
+                "assets/gifs/auth.gif",
+                height: size.height * 0.4,
+              ),
               const SignupInputs(),
             ],
           ),

@@ -5,10 +5,10 @@ class InputField extends StatelessWidget {
   const InputField({
     Key? key,
     required this.controller,
-    required this.validator,
-    required this.onSaved,
     required this.hintText,
     required this.icon,
+    this.onSubmitted,
+    this.onChanged,
     this.suffix,
     this.labelStyle,
     this.style,
@@ -16,50 +16,77 @@ class InputField extends StatelessWidget {
     this.textInputType = TextInputType.text,
     this.onFocus = false,
     this.readOnly = false,
+    this.suffixIconButton,
+    this.horizontalMargin = 20.0,
+    this.verticalMargin = 7.0,
+    this.horizontalPadding = 10.0,
+    this.verticalPadding = 3.0,
   }) : super(key: key);
 
   final TextInputType textInputType;
   final bool obscureText;
-  final void Function(String? value) onSaved;
   final bool readOnly;
   final TextEditingController controller;
   final TextStyle? style;
-  final String? Function(String? value) validator;
   final bool onFocus;
   final Widget? suffix;
   final String hintText;
   final TextStyle? labelStyle;
   final IconData icon;
+  final Widget? suffixIconButton;
+  final void Function(String)? onSubmitted;
+  final void Function(String)? onChanged;
+
+  final double horizontalMargin;
+  final double verticalMargin;
+  final double horizontalPadding;
+  final double verticalPadding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7.0),
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      margin: EdgeInsets.symmetric(
+        horizontal: horizontalMargin,
+        vertical: verticalMargin,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: verticalPadding,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
         color: purpleMaterialColor[200],
       ),
-      child: TextFormField(
+      child: TextField(
         decoration: InputDecoration(
           border: InputBorder.none,
           suffix: suffix,
-          isDense: true,
+          suffixIcon: suffixIconButton,
+          isDense: false,
           hintText: hintText,
+          hintStyle: const TextStyle(
+            fontSize: 17.0,
+          ),
           icon: Icon(
             icon,
             color: mainColor,
             size: 26,
           ),
+          errorMaxLines: 1,
+          errorText: null,
+          errorStyle: const TextStyle(
+            color: Colors.transparent,
+            fontSize: 0,
+          ),
         ),
         autocorrect: true,
         keyboardType: textInputType,
         obscureText: obscureText,
-        onSaved: onSaved,
         readOnly: readOnly,
         controller: controller,
         style: style,
-        validator: validator,
+        onSubmitted: onSubmitted,
+        onChanged: onChanged,
         autofocus: onFocus,
       ),
     );
