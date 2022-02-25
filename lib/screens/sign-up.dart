@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/auth-screen/input-image.dart';
 import 'package:chat_app/widgets/auth-screen/signup-inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/auth-screen/background.dart';
@@ -15,8 +16,8 @@ class SignUp extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
+            children: const [
+              Text(
                 "SIGN UP",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -24,11 +25,10 @@ class SignUp extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Image.asset(
-                "assets/gifs/auth.gif",
-                height: size.height * 0.4,
-              ),
-              const SignupInputs(),
+              SizedBox(height: 20.0),
+              InputImage(),
+              SizedBox(height: 30.0),
+              SignupInputs(),
             ],
           ),
         ),

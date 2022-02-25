@@ -11,7 +11,6 @@ class InputField extends StatelessWidget {
     this.onChanged,
     this.suffix,
     this.labelStyle,
-    this.style,
     this.obscureText = false,
     this.textInputType = TextInputType.text,
     this.onFocus = false,
@@ -27,7 +26,6 @@ class InputField extends StatelessWidget {
   final bool obscureText;
   final bool readOnly;
   final TextEditingController controller;
-  final TextStyle? style;
   final bool onFocus;
   final Widget? suffix;
   final String hintText;
@@ -54,7 +52,7 @@ class InputField extends StatelessWidget {
         vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(25.0),
         color: purpleMaterialColor[200],
       ),
       child: TextField(
@@ -84,7 +82,7 @@ class InputField extends StatelessWidget {
         obscureText: obscureText,
         readOnly: readOnly,
         controller: controller,
-        style: style,
+        style: const TextStyle(fontSize: 18.0),
         onSubmitted: onSubmitted,
         onChanged: onChanged,
         autofocus: onFocus,
