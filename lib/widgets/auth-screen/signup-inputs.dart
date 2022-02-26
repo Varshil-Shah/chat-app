@@ -14,6 +14,7 @@ class _SignupInputsState extends State<SignupInputs> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool isPasswordVisible = false;
 
   void showSnackbar(String value) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -87,12 +88,16 @@ class _SignupInputsState extends State<SignupInputs> {
           controller: _passwordController,
           hintText: "Enter password",
           icon: Icons.lock_outline,
+          obscureText: isPasswordVisible,
           suffixIconButton: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.remove_red_eye_outlined,
-              size: 22.0,
-            ),
+            onPressed: () {
+              setState(() {
+                isPasswordVisible = !isPasswordVisible;
+              });
+            },
+            icon: isPasswordVisible
+                ? const Icon(Icons.visibility_off_outlined, color: mainColor)
+                : const Icon(Icons.visibility_outlined, color: mainColor),
           ),
         ),
         InputButton(onPressed: _submitForm, text: "SIGN UP"),
