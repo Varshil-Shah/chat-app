@@ -17,7 +17,7 @@ class InputField extends StatelessWidget {
     this.readOnly = false,
     this.suffixIconButton,
     this.horizontalMargin = 20.0,
-    this.verticalMargin = 7.0,
+    this.verticalMargin = 10.0,
     this.horizontalPadding = 10.0,
     this.verticalPadding = 3.0,
   }) : super(key: key);

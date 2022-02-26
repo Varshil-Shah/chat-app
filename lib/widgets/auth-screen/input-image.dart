@@ -73,7 +73,7 @@ class _InputImageState extends State<InputImage> {
                   style: TextStyle(fontSize: 18.0),
                 ),
                 onTap: () => takeImage(ImageInputMethod.camera),
-                trailing: const Icon(Icons.camera_alt_outlined),
+                leading: const Icon(Icons.camera_alt_outlined),
               ),
               ListTile(
                 dense: true,
@@ -82,7 +82,7 @@ class _InputImageState extends State<InputImage> {
                   style: TextStyle(fontSize: 18.0),
                 ),
                 onTap: () => takeImage(ImageInputMethod.gallery),
-                trailing: const Icon((Icons.photo_camera_back_outlined)),
+                leading: const Icon((Icons.photo_camera_back_outlined)),
               ),
             ],
           ),

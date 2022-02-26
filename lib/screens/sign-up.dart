@@ -1,12 +1,14 @@
 import 'dart:io';
+import 'package:chat_app/screens/login.dart';
+import 'package:flutter/material.dart';
 
 import 'package:chat_app/widgets/auth-screen/input-image.dart';
 import 'package:chat_app/widgets/auth-screen/signup-inputs.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/auth-screen/background.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
+  static const routeName = "/sign-up";
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,16 @@ class SignUp extends StatelessWidget {
               InputImage(pickedImage: imageFile),
               const SizedBox(height: 30.0),
               const SignupInputs(),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(Login.routeName),
+                  child: const Text(
+                    "Already have an account? Login",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ),
+              )
             ],
           ),
         ),
