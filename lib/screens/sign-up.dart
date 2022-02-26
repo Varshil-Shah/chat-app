@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:chat_app/screens/login.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/widgets/auth-screen/input-image.dart';
@@ -12,7 +11,6 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     File? imageFile;
 
     return Scaffold(
@@ -37,13 +35,13 @@ class SignUp extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 child: GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed(Login.routeName),
+                  onTap: () => Navigator.of(context).pop(),
                   child: const Text(
                     "Already have an account? Login",
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

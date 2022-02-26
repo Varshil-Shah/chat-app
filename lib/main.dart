@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(146, 31, 243, 1),
       ),
-      home: const SignUp(),
+      home: const Login(),
       routes: {
         SignUp.routeName: (ctx) => const SignUp(),
         Login.routeName: (ctx) => const Login(),
