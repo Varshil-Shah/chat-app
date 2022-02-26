@@ -6,7 +6,8 @@ import 'package:chat_app/widgets/common/input-field.dart';
 import 'package:chat_app/widgets/common/input-button.dart';
 
 class LoginInputs extends StatefulWidget {
-  const LoginInputs({Key? key}) : super(key: key);
+  bool isLoading = false;
+  LoginInputs({Key? key, required this.isLoading}) : super(key: key);
 
   @override
   _LoginInputsState createState() => _LoginInputsState();
@@ -24,6 +25,7 @@ class _LoginInputsState extends State<LoginInputs> {
       context,
     )) return;
     debugPrint("LOGIN CREDENTIALS ARE CORRECT");
+    widget.isLoading = true;
   }
 
   @override
@@ -51,7 +53,11 @@ class _LoginInputsState extends State<LoginInputs> {
                 : const Icon(Icons.visibility_outlined, color: mainColor),
           ),
         ),
-        InputButton(onPressed: _submitForm, text: "LOGIN"),
+        InputButton(
+          onPressed: _submitForm,
+          text: "LOGIN",
+          isLoading: widget.isLoading,
+        ),
       ],
     );
   }

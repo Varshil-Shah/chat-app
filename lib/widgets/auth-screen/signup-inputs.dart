@@ -5,7 +5,18 @@ import 'package:chat_app/widgets/common/verify-fields.dart';
 import 'package:flutter/material.dart';
 
 class SignupInputs extends StatefulWidget {
-  const SignupInputs({Key? key}) : super(key: key);
+  final void Function({
+    required String email,
+    required String password,
+    required String username,
+  }) submitForm;
+  final bool isLoading;
+
+  const SignupInputs({
+    Key? key,
+    required this.submitForm,
+    required this.isLoading,
+  }) : super(key: key);
 
   @override
   _SignupInputsState createState() => _SignupInputsState();
@@ -17,57 +28,7 @@ class _SignupInputsState extends State<SignupInputs> {
   final _passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
-  void showSnackbar(String value) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          value,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 16.0),
-        ),
-      ),
-    );
-  }
-
-  void checkUsername(String value) {
-    if (value.isEmpty) {
-      return showSnackbar("username field can't be empty");
-    }
-    if (value.length < 8) {
-      return showSnackbar("minimun 6 characters required in username");
-    }
-    checkEmailAddress(_emailController.text);
-  }
-
-  void checkEmailAddress(String value) {
-    if (value.isEmpty) return showSnackbar("email address cannot be empty");
-    if (!RegExp(emailRegex).hasMatch(value)) {
-      return showSnackbar("please enter a valid email address");
-    }
-    checkPassword(_passwordController.text);
-  }
-
-  void checkPassword(String value) {
-    if (value.isEmpty) return showSnackbar("password cannot be empty");
-
-    if (value.length < 8) {
-      return showSnackbar('password must contain - minimum 8 characters');
-    }
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return showSnackbar('password must contain - A lowercase letter');
-    }
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return showSnackbar('password must contain - An uppercase letter');
-    }
-    if (!RegExp(r'[!@#\$&*~.-/:`]').hasMatch(value)) {
-      return showSnackbar('password must contain - A special character');
-    }
-    if (!RegExp(r'\d').hasMatch(value)) {
-      return showSnackbar('password must contain - A number');
-    }
-  }
-
-  void _submitForm() {
+  void _validateForm() {
     if (!VerifyInputs.verifySignUp(
       _usernameController.text,
       _emailController.text,
@@ -75,6 +36,11 @@ class _SignupInputsState extends State<SignupInputs> {
       context,
     )) return;
     debugPrint("SIGN UP CREDENTIALS ARE CORRECT");
+    widget.submitForm(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+    );
   }
 
   @override
@@ -107,7 +73,11 @@ class _SignupInputsState extends State<SignupInputs> {
                 : const Icon(Icons.visibility_outlined, color: mainColor),
           ),
         ),
-        InputButton(onPressed: _submitForm, text: "SIGN UP"),
+        InputButton(
+          onPressed: _validateForm,
+          text: "SIGN UP",
+          isLoading: widget.isLoading,
+        ),
       ],
     );
   }

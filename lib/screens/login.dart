@@ -4,9 +4,16 @@ import 'package:chat_app/widgets/common/background.dart';
 import 'package:chat_app/widgets/auth-screen/login-inputs.dart';
 import 'package:chat_app/screens/sign-up.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
   static const routeName = "/login";
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,9 @@ class Login extends StatelessWidget {
               "assets/images/mobile-login.png",
               width: size.width,
             ),
-            const LoginInputs(),
+            LoginInputs(
+              isLoading: _isLoading,
+            ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 10.0),
               child: GestureDetector(

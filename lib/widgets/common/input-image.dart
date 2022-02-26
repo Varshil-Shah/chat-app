@@ -6,9 +6,10 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class InputImage extends StatefulWidget {
-  File? pickedImage;
+  final void Function(File? imageFile) onStoreImage;
+  File? storedImage;
 
-  InputImage({Key? key, this.pickedImage}) : super(key: key);
+  InputImage({Key? key, required this.onStoreImage}) : super(key: key);
 
   @override
   _InputImageState createState() => _InputImageState();
@@ -27,13 +28,22 @@ class _InputImageState extends State<InputImage> {
     void takeImage(ImageInputMethod method) async {
       XFile? image;
       if (ImageInputMethod.camera == method) {
-        image = await ImagePicker().pickImage(source: ImageSource.camera);
+        image = await ImagePicker().pickImage(
+          source: ImageSource.camera,
+          imageQuality: 50,
+        );
       } else {
-        image = await ImagePicker().pickImage(source: ImageSource.gallery);
+        image = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 50,
+        );
       }
       setState(() {
-        widget.pickedImage = File(image!.path);
+        widget.storedImage = File(image!.path);
       });
+      widget.onStoreImage(widget.storedImage);
+      debugPrint("PICKED IMAGE: ${widget.storedImage}");
+      Navigator.of(context).pop();
     }
 
     void showImageInputOptions() {
@@ -94,8 +104,8 @@ class _InputImageState extends State<InputImage> {
       children: [
         CircleAvatar(
           radius: 60,
-          backgroundImage: widget.pickedImage != null
-              ? FileImage(widget.pickedImage as File)
+          backgroundImage: widget.storedImage != null
+              ? FileImage(widget.storedImage as File)
               : const AssetImage("assets/images/circular-avatar.png")
                   as ImageProvider,
           backgroundColor: Colors.grey,
