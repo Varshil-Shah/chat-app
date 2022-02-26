@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:chat_app/widgets/auth-screen/background.dart';
+import 'package:chat_app/widgets/common/background.dart';
 import 'package:chat_app/widgets/auth-screen/login-inputs.dart';
 import 'package:chat_app/screens/sign-up.dart';
 

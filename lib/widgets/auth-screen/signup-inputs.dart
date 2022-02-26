@@ -1,6 +1,7 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/widgets/auth-screen/input-button.dart';
-import 'package:chat_app/widgets/auth-screen/input-field.dart';
+import 'package:chat_app/widgets/common/input-button.dart';
+import 'package:chat_app/widgets/common/input-field.dart';
+import 'package:chat_app/widgets/common/verify-fields.dart';
 import 'package:flutter/material.dart';
 
 class SignupInputs extends StatefulWidget {
@@ -67,7 +68,13 @@ class _SignupInputsState extends State<SignupInputs> {
   }
 
   void _submitForm() {
-    checkUsername(_usernameController.text);
+    if (!VerifyInputs.verifySignUp(
+      _usernameController.text,
+      _emailController.text,
+      _passwordController.text,
+      context,
+    )) return;
+    debugPrint("SIGN UP CREDENTIALS ARE CORRECT");
   }
 
   @override

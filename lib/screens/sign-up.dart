@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:chat_app/widgets/auth-screen/input-image.dart';
+import 'package:chat_app/widgets/common/input-image.dart';
 import 'package:chat_app/widgets/auth-screen/signup-inputs.dart';
-import 'package:chat_app/widgets/auth-screen/background.dart';
+import 'package:chat_app/widgets/common/background.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
