@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
             ),
             const SizedBox(height: 15.0),
             Image.asset(
-              "assets/images/mobile-login.png",
+              "assets/images/authentication.png",
               width: size.width,
             ),
             LoginInputs(

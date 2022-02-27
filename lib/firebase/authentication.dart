@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:chat_app/utils/common.dart' show fileFromImageUrl;
 
 class Authentication {
-  User? user;
+  UserCredential? userCreds;
 
   late final FirebaseAuth _firebaseAuth;
   late final FirebaseFirestore _firebaseFirestore;
@@ -46,7 +45,8 @@ class Authentication {
 
     if (authenticationResult.userCredential == null) return null;
 
-    image ??= await _fileFromImageUrl();
+    userCreds = authenticationResult.userCredential!;
+    image ??= await fileFromImageUrl();
 
     final ref = FirebaseStorage.instance
         .ref()
@@ -102,17 +102,6 @@ class Authentication {
       error: error,
     );
   }
-}
-
-Future<File> _fileFromImageUrl() async {
-  final response = await http.get(
-    Uri.parse(
-        "https://raw.githubusercontent.com/Varshil-Shah/chat-app/main/assets/images/circular-avatar.png"),
-  );
-  final documentDirectory = await getTemporaryDirectory();
-  final file = File(join(documentDirectory.path, 'circular-avatar.png'));
-  file.writeAsBytesSync(response.bodyBytes);
-  return file;
 }
 
 class AuthenticationResult {
