@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:chat_app/widgets/common/input-image.dart';
 import 'package:chat_app/widgets/auth-screen/signup-inputs.dart';
+import 'package:chat_app/screens/verify-email.dart';
 import 'package:chat_app/widgets/common/background.dart';
 
 class SignUp extends StatefulWidget {
@@ -51,6 +52,7 @@ class _SignUpState extends State<SignUp> {
       return;
     }
     VerifyInputs.showSnackbar("SIGN UP SUCCESSFUL", context);
+    Navigator.pushReplacementNamed(context, VerifyEmail.routeName);
   }
 
   @override
