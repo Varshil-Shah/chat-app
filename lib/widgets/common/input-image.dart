@@ -7,9 +7,8 @@ import 'package:image_picker/image_picker.dart';
 
 class InputImage extends StatefulWidget {
   final void Function(File? imageFile) onStoreImage;
-  File? storedImage;
 
-  InputImage({Key? key, required this.onStoreImage}) : super(key: key);
+  const InputImage({Key? key, required this.onStoreImage}) : super(key: key);
 
   @override
   _InputImageState createState() => _InputImageState();
@@ -21,30 +20,27 @@ enum ImageInputMethod {
 }
 
 class _InputImageState extends State<InputImage> {
+  File? _storedImage;
+
+  Future<void> takeImage(ImageInputMethod method) async {
+    XFile? image;
+    if (ImageInputMethod.camera == method) {
+      image = await ImagePicker().pickImage(source: ImageSource.camera);
+    } else {
+      image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    }
+    if (image == null) return;
+    setState(() {
+      _storedImage = File(image!.path);
+    });
+    debugPrint("PICKED IMAGE: $_storedImage");
+    widget.onStoreImage(_storedImage);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
-    void takeImage(ImageInputMethod method) async {
-      XFile? image;
-      if (ImageInputMethod.camera == method) {
-        image = await ImagePicker().pickImage(
-          source: ImageSource.camera,
-          imageQuality: 50,
-        );
-      } else {
-        image = await ImagePicker().pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 50,
-        );
-      }
-      setState(() {
-        widget.storedImage = File(image!.path);
-      });
-      widget.onStoreImage(widget.storedImage);
-      debugPrint("PICKED IMAGE: ${widget.storedImage}");
-      Navigator.of(context).pop();
-    }
 
     void showImageInputOptions() {
       showModalBottomSheet(
@@ -104,8 +100,8 @@ class _InputImageState extends State<InputImage> {
       children: [
         CircleAvatar(
           radius: 60,
-          backgroundImage: widget.storedImage != null
-              ? FileImage(widget.storedImage as File)
+          backgroundImage: _storedImage != null
+              ? FileImage(_storedImage as File)
               : const AssetImage("assets/images/circular-avatar.png")
                   as ImageProvider,
           backgroundColor: Colors.grey,

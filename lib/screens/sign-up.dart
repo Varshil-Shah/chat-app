@@ -35,8 +35,6 @@ class _SignUpState extends State<SignUp> {
     await Firebase.initializeApp();
     final auth = Authentication();
 
-    _imageFile ??= File("assets/images/circular-avatar.png");
-
     final error = await auth.addUserUsingEmailAndPassword(
       email: email,
       password: password,
@@ -47,7 +45,7 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       _isLoading = false;
     });
-    if (error != null || error!.isNotEmpty) {
+    if (error != null && error.isNotEmpty) {
       debugPrint("IMAGE FILE: $_imageFile");
       VerifyInputs.showSnackbar(error, context);
       return;
