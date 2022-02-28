@@ -80,27 +80,6 @@ class Authentication {
     return error;
   }
 
-  Future<void> sendEmailVerification(User? user) async {
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
-    }
-  }
-
-  Future<void> verifyCurrentUser() async {
-    if (!isEmailVerified) {
-      User? user = _firebaseAuth.currentUser;
-      await sendEmailVerification(user);
-    }
-  }
-
-  bool get isEmailVerified {
-    bool result = _firebaseAuth.currentUser!.emailVerified;
-    debugPrint(
-        "CURRENT USER FROM IS_EMAIL_VERIFIED: ${_firebaseAuth.currentUser}");
-    debugPrint("EMAIL VERIFIED: $result");
-    return result;
-  }
-
   Future<AuthenticationResult> _createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -126,6 +105,28 @@ class Authentication {
       error: error,
     );
   }
+
+  Future<void> sendEmailVerification(User? user) async {
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
+  Future<void> verifyCurrentUser() async {
+    if (!isEmailVerified) {
+      User? user = _firebaseAuth.currentUser;
+      user!.reload();
+      await sendEmailVerification(user);
+    }
+  }
+
+  bool get isEmailVerified {
+    final user = _firebaseAuth.currentUser;
+    user!.reload();
+    return user.emailVerified;
+  }
+
+  User? get currentUser => _firebaseAuth.currentUser;
 }
 
 class AuthenticationResult {

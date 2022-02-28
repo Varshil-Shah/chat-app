@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat_app/firebase/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,18 +15,22 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class _VerifyEmailState extends State<VerifyEmail> {
-  final auth = FirebaseAuth.instance;
+  final auth = Authentication();
   User? user;
   late Timer timer;
 
   @override
   void initState() {
-    user = auth.currentUser;
-    user != null
-        ? user!.sendEmailVerification()
-        : debugPrint("USER UNDEFINIED");
-    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      checkEmailVerified();
+    auth.verifyCurrentUser().then((value) {
+      timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+        if (auth.isEmailVerified) {
+          timer.cancel();
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            Home.routeName,
+            (Route<dynamic> route) => false,
+          );
+        }
+      });
     });
     super.initState();
   }
@@ -42,7 +47,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
       await user!.reload();
       if (user!.emailVerified) {
         timer.cancel();
-        debugPrint("USER HAS BEEN VERIFIED");
         Navigator.of(context).pushReplacementNamed(Home.routeName);
       }
     }

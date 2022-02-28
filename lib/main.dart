@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:chat_app/screens/home.dart';
 import 'package:chat_app/screens/login.dart';
 import 'package:chat_app/screens/sign-up.dart';
 import 'package:chat_app/screens/verify-email.dart';
-import 'package:chat_app/screens/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
