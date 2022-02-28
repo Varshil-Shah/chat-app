@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chat_app/firebase/authentication.dart';
+import 'package:chat_app/widgets/auth-screen/resend-email-button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -21,6 +22,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   @override
   void initState() {
+    sendAndVerifyEmail();
+    super.initState();
+  }
+
+  void sendAndVerifyEmail() {
     auth.verifyCurrentUser().then((value) {
       timer = Timer.periodic(const Duration(seconds: 2), (timer) {
         if (auth.isEmailVerified) {
@@ -32,7 +38,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
         }
       });
     });
-    super.initState();
   }
 
   @override
@@ -94,14 +99,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             style: TextStyle(fontSize: 40.0),
           ),
           const SizedBox(height: 10),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 7.0),
-            child: const Text(
-              "NOTE: Return to the app again after clicking the link",
-              style: TextStyle(fontSize: 18, color: Colors.black87),
-              textAlign: TextAlign.center,
-            ),
-          )
+          ResendEmailButton(resendEmail: sendAndVerifyEmail),
         ],
       ),
     );
