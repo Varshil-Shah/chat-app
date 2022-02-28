@@ -52,7 +52,9 @@ class _SignUpState extends State<SignUp> {
       return;
     }
     VerifyInputs.showSnackbar("SIGN UP SUCCESSFUL", context);
-    Navigator.pushReplacementNamed(context, VerifyEmail.routeName);
+    Navigator.pushReplacementNamed(context, VerifyEmail.routeName, arguments: {
+      'email': email,
+    });
   }
 
   @override
@@ -77,12 +79,12 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 30.0),
               SignupInputs(submitForm: _submitForm, isLoading: _isLoading),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                margin: const EdgeInsets.symmetric(vertical: 15.0),
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: const Text(
                     "Already have an account? Login",
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(fontSize: 17.0),
                   ),
                 ),
               ),

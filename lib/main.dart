@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:chat_app/screens/login.dart';
 import 'package:chat_app/screens/sign-up.dart';
 import 'package:chat_app/screens/verify-email.dart';
+import 'package:chat_app/screens/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -17,11 +22,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(146, 31, 243, 1),
       ),
-      home: const VerifyEmail(),
+      home: const Login(),
       routes: {
         SignUp.routeName: (ctx) => const SignUp(),
         Login.routeName: (ctx) => const Login(),
         VerifyEmail.routeName: (ctx) => const VerifyEmail(),
+        Home.routeName: (ctx) => const Home(),
       },
     );
   }

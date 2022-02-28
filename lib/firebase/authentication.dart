@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 
 import 'package:chat_app/utils/common.dart' show fileFromImageUrl;
 
 class Authentication {
-  UserCredential? userCreds;
+  late UserCredential userCreds;
 
   late final FirebaseAuth _firebaseAuth;
   late final FirebaseFirestore _firebaseFirestore;
@@ -45,13 +46,13 @@ class Authentication {
 
     if (authenticationResult.userCredential == null) return null;
 
-    userCreds = authenticationResult.userCredential!;
     image ??= await fileFromImageUrl();
 
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child("image_path")
-        .child(authenticationResult.userCredential!.user!.uid + '.jpg');
+    final ref = FirebaseStorage.instance.ref().child("image_path").child(
+          authenticationResult.userCredential!.user!.uid +
+              path.extension(image.path),
+        );
+    debugPrint("IMAGE EXTENSION: ${path.extension(image.path)}");
     TaskSnapshot uploadedFile = await ref.putFile(image);
 
     if (uploadedFile.state == TaskState.success) {
@@ -74,7 +75,30 @@ class Authentication {
       debugPrint("ERRROR IN addUserUsingEmailAndPassword - ${e.toString()}");
       error = e.toString();
     });
+
+    userCreds = authenticationResult.userCredential!;
     return error;
+  }
+
+  Future<void> sendEmailVerification(User? user) async {
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
+  Future<void> verifyCurrentUser() async {
+    if (!isEmailVerified) {
+      User? user = _firebaseAuth.currentUser;
+      await sendEmailVerification(user);
+    }
+  }
+
+  bool get isEmailVerified {
+    bool result = _firebaseAuth.currentUser!.emailVerified;
+    debugPrint(
+        "CURRENT USER FROM IS_EMAIL_VERIFIED: ${_firebaseAuth.currentUser}");
+    debugPrint("EMAIL VERIFIED: $result");
+    return result;
   }
 
   Future<AuthenticationResult> _createUserWithEmailAndPassword({

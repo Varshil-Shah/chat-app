@@ -21,7 +21,7 @@ class VerifyInputs {
       showSnackbar("username field can't be empty", context);
       return false;
     } else if (value.length < 8) {
-      showSnackbar("minimun 6 characters required in username", context);
+      showSnackbar("minimun 8 characters required in username", context);
       return false;
     }
     return true;
@@ -45,6 +45,9 @@ class VerifyInputs {
       return false;
     } else if (value.length < 8) {
       showSnackbar('password must contain - minimum 8 characters', context);
+      return false;
+    } else if (value.length > 30) {
+      showSnackbar('password must contain - maximum 30 characters', context);
       return false;
     } else if (!RegExp(r'[a-z]').hasMatch(value)) {
       showSnackbar('password must contain - A lowercase letter', context);

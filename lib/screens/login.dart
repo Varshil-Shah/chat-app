@@ -43,12 +43,12 @@ class _LoginState extends State<Login> {
               isLoading: _isLoading,
             ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              margin: const EdgeInsets.symmetric(vertical: 15.0),
               child: GestureDetector(
                 onTap: () => Navigator.of(context).pushNamed(SignUp.routeName),
                 child: const Text(
                   "Don't have an account? signup",
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(fontSize: 17.0),
                 ),
               ),
             )
