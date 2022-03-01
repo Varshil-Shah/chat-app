@@ -62,10 +62,10 @@ class Authentication {
     final data = <String, dynamic>{};
     data['email'] = email;
     data['username'] = username;
-    data['createdAt'] =
-        authenticationResult.userCredential!.user?.metadata.creationTime ??
-            FieldValue.serverTimestamp();
+    data['createdAt'] = FieldValue.serverTimestamp();
     data['imageUrl'] = imageUrl;
+    data['resendEmailCount'] = 0;
+    data['nextResendEmailTime'] = Timestamp.now();
     if (values != null) data.addAll(values);
 
     _firebaseFirestore
@@ -127,6 +127,35 @@ class Authentication {
   }
 
   User? get currentUser => _firebaseAuth.currentUser;
+
+  Future<void> setUserCredentials(String key, dynamic value) =>
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser!.uid)
+          .update({key: value});
+
+  Future<dynamic> getUserCredentials(String key) async {
+    final doc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUser!.uid)
+        .get();
+    return doc[key];
+  }
+
+  Future<int> getResendEmailCount() async =>
+      (await getUserCredentials('resendEmailCount')) as int;
+
+  Future<void> setResendEmailCount(int count) =>
+      setUserCredentials('resendEmailCount', count);
+
+  Future<Timestamp> getNextResendEmailTime() async =>
+      await getUserCredentials('nextResendEmailTime') as Timestamp;
+
+  Future<void> setNextResendEmailTime(Timestamp time) =>
+      setUserCredentials('nextResendEmailTime', time);
+
+  Future<void> incrementResendEmailCount() async =>
+      await setResendEmailCount(await getResendEmailCount() + 1);
 }
 
 class AuthenticationResult {

@@ -13,3 +13,20 @@ Future<File> fileFromImageUrl() async {
   file.writeAsBytesSync(response.bodyBytes);
   return file;
 }
+
+String maskEmail(String email) {
+  final splits = email.split("@");
+
+  final username = splits[0];
+  splits[0] = username.replaceRange(2, null, "*" * (username.length - 2));
+
+  final domainParts = splits[1].split('.');
+
+  final secondLevelDomain = domainParts[0];
+  domainParts[0] = secondLevelDomain.replaceRange(
+      1, null, '*' * (secondLevelDomain.length - 1));
+
+  splits[1] = domainParts.join(".");
+
+  return splits.join("@");
+}

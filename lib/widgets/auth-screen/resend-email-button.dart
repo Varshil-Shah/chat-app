@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:chat_app/firebase/authentication.dart';
+import 'package:chat_app/widgets/common/verify-fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 
 class ResendEmailButton extends StatefulWidget {
-  final void Function() resendEmail;
+  final Future<void> Function() resendEmail;
   const ResendEmailButton({
     Key? key,
     required this.resendEmail,
@@ -15,25 +18,10 @@ class ResendEmailButton extends StatefulWidget {
 }
 
 class _ResendEmailButtonState extends State<ResendEmailButton> {
+  final auth = Authentication();
+  late Timer timer;
   bool isActive = false;
-  Timer? timer;
   int counter = 60;
-
-  void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (time) {
-      if (counter <= 0) {
-        timer!.cancel();
-        setState(() {
-          isActive = true;
-        });
-        counter = 60;
-      } else {
-        setState(() {
-          counter--;
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
@@ -41,10 +29,52 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    timer!.cancel();
-    super.dispose();
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (time) {
+      if (counter == 0) {
+        timer.cancel();
+        setState(() {
+          isActive = true;
+          counter = 60;
+        });
+      } else {
+        setState(() {
+          --counter;
+        });
+      }
+    });
+  }
+
+  void _onPressed() async {
+    if (await auth.getResendEmailCount() == kMaxEmailResendCount) {
+      await auth.setNextResendEmailTime(
+          Timestamp.fromDate(DateTime.now().add(const Duration(hours: 1))));
+      setState(() {
+        isActive = !isActive;
+      });
+      VerifyInputs.showSnackbar("Please try again after an hour", context);
+      return;
+    }
+
+    final nextResendEmailTime = (await auth.getNextResendEmailTime()).toDate();
+    final now = DateTime.now();
+    if (nextResendEmailTime.isAfter(now)) {
+      setState(() {
+        isActive = !isActive;
+      });
+      VerifyInputs.showSnackbar(
+        "Please try again after ${nextResendEmailTime.difference(now).inMinutes} min",
+        context,
+      );
+      return;
+    }
+
+    auth.incrementResendEmailCount();
+    widget.resendEmail();
+    setState(() {
+      isActive = !isActive;
+    });
+    startTimer();
   }
 
   @override
@@ -55,20 +85,15 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
       margin: const EdgeInsets.symmetric(vertical: 7),
       width: size.width * 0.9,
       child: ElevatedButton(
-        onPressed: isActive
-            ? () {
-                widget.resendEmail();
-                setState(() {
-                  isActive = !isActive;
-                });
-                startTimer();
-              }
-            : null,
+        onPressed: isActive ? _onPressed : null,
         child: Text(
           isActive
-              ? "RESEND EMAIL"
-              : "00 : " + counter.toString().padLeft(2, '0'),
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+              ? "Resend Email"
+              : "Resend Email in " + counter.toString().padLeft(2, '0') + "s",
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.black54,
+            fontSize: 18,
+          ),
         ),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -79,5 +104,11 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 }
