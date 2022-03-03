@@ -106,6 +106,29 @@ class Authentication {
     );
   }
 
+  Future<AuthenticationResult> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    UserCredential? userCreds;
+    String? error;
+    try {
+      userCreds = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (err) {
+      if (err.code == "user-not-found") {
+        error = "No user found with this email";
+      } else if (err.code == "wrong-password") {
+        error = "wrong password provided for the email";
+      } else {
+        error = err.message;
+      }
+    }
+    return AuthenticationResult(userCredential: userCreds, error: error);
+  }
+
   Future<void> sendEmailVerification(User? user) async {
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
