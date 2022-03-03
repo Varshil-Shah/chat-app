@@ -65,7 +65,7 @@ class Authentication {
     data['createdAt'] = FieldValue.serverTimestamp();
     data['imageUrl'] = imageUrl;
     data['resendEmailCount'] = 0;
-    data['nextResendEmailTime'] = Timestamp.now();
+    data['nextResendEmailTime'] = null;
     if (values != null) data.addAll(values);
 
     _firebaseFirestore
@@ -148,10 +148,10 @@ class Authentication {
   Future<void> setResendEmailCount(int count) =>
       setUserCredentials('resendEmailCount', count);
 
-  Future<Timestamp> getNextResendEmailTime() async =>
-      await getUserCredentials('nextResendEmailTime') as Timestamp;
+  Future<Timestamp?> getNextResendEmailTime() async =>
+      await getUserCredentials('nextResendEmailTime') as Timestamp?;
 
-  Future<void> setNextResendEmailTime(Timestamp time) =>
+  Future<void> setNextResendEmailTime(Timestamp? time) =>
       setUserCredentials('nextResendEmailTime', time);
 
   Future<void> incrementResendEmailCount() async =>

@@ -4,7 +4,6 @@ import 'package:chat_app/firebase/authentication.dart';
 import 'package:chat_app/utils/common.dart';
 import 'package:chat_app/widgets/auth-screen/resend-email-button.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:chat_app/screens/home.dart';
 
@@ -18,13 +17,12 @@ class VerifyEmail extends StatefulWidget {
 
 class _VerifyEmailState extends State<VerifyEmail> {
   final auth = Authentication();
-  User? user;
   late Timer timer;
 
   @override
   void initState() {
-    sendAndVerifyEmail();
     super.initState();
+    sendAndVerifyEmail();
   }
 
   Future<void> sendAndVerifyEmail() async {
@@ -47,10 +45,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
   }
 
   Future<void> checkEmailVerified() async {
+    final user = auth.currentUser;
     if (user != null) {
-      user = auth.currentUser;
-      await user!.reload();
-      if (user!.emailVerified) {
+      await user.reload();
+      if (user.emailVerified) {
         timer.cancel();
         Navigator.of(context).pushReplacementNamed(Home.routeName);
       }
@@ -59,8 +57,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -86,32 +82,32 @@ class _VerifyEmailState extends State<VerifyEmail> {
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black87,
+                ),
+                children: [
+                  const TextSpan(
+                    text: "Almost there! We've sent a verification email to \n",
                   ),
-                  children: [
-                    const TextSpan(
-                      text:
-                          "Almost there! We've sent a verification email to \n",
-                    ),
-                    WidgetSpan(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 5.0, bottom: 12.0),
-                        child: Text(
-                          maskEmail(args['email'] as String),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  WidgetSpan(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 5.0, bottom: 12.0),
+                      child: Text(
+                        maskEmail(auth.currentUser!.email ?? "Email not found"),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const TextSpan(
-                      text:
-                          ".\nYou need to verify your email address to log into Chat App.",
-                    )
-                  ]),
+                  ),
+                  const TextSpan(
+                    text:
+                        ".\nYou need to verify your email address to log into Chat App.",
+                  )
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 10),
