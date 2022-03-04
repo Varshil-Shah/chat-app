@@ -18,5 +18,5 @@ const purpleMaterialColor = MaterialColor(0xFFA633FF, {
 const emailRegex =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-const kMaxEmailResendCount = 3;
+const kMaxEmailResendCount = 2;
 const kResendButtonCooldownTime = 60;

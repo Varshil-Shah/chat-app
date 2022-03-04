@@ -40,6 +40,7 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
   Future<Duration?> checkNextResendEmailTime() async {
     // Check if nextResendEmailTime is set in DB
     final nextResendEmailTime = (await auth.getNextResendEmailTime())?.toDate();
+    Timer? timer;
 
     // This means, timer is still active in database
     if (nextResendEmailTime != null) {
@@ -51,9 +52,25 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
       if (!remainingCooldownTime.isNegative) {
         setState(() {
           isNextResendEmailTimerActive = true;
-          buttonText = "Time remaining ${remainingCooldownTime.inMinutes}"
-              " minute${remainingCooldownTime.inMinutes == 1 ? '' : 's'}";
         });
+        int timeInSecs = remainingCooldownTime.inSeconds;
+        timer = Timer.periodic(const Duration(seconds: 1), (time) {
+          if (timeInSecs > 0) {
+            --timeInSecs;
+            setState(() {
+              buttonText =
+                  "Time remaining ${(timeInSecs ~/ 60).toString().padLeft(2, '0')} : ${(timeInSecs % 60).toString().padLeft(2, '0')}";
+            });
+          } else {
+            timer?.cancel();
+            auth.setResendEmailCount(0);
+            setState(() {
+              buttonText = "Resend email";
+              isButtonActive = true;
+            });
+          }
+        });
+
         return remainingCooldownTime;
       }
 
@@ -97,7 +114,7 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
     if (await auth.getResendEmailCount() == kMaxEmailResendCount - 1) {
       // set timer of 1 hr
       final timeAfter1Hr = Timestamp.fromDate(
-        DateTime.now().add(const Duration(hours: 1)),
+        DateTime.now().add(const Duration(hours: 1, seconds: 1)),
       );
       auth.setNextResendEmailTime(timeAfter1Hr);
     }
@@ -128,8 +145,25 @@ class _ResendEmailButtonState extends State<ResendEmailButton> {
               .difference(DateTime.now());
           setState(() {
             isNextResendEmailTimerActive = true;
-            buttonText =
-                "Time remaining ${cooldownTime!.inMinutes} minute${cooldownTime.inMinutes == 1 ? '' : 's'}";
+          });
+
+          int timeInSecs = cooldownTime!.inSeconds;
+          Timer? timer;
+          timer = Timer.periodic(const Duration(seconds: 1), (time) {
+            if (timeInSecs > 0) {
+              --timeInSecs;
+              setState(() {
+                buttonText =
+                    "Time remaining ${(timeInSecs ~/ 60).toString().padLeft(2, '0')} : ${(timeInSecs % 60).toString().padLeft(2, '0')}";
+              });
+            } else {
+              timer?.cancel();
+              auth.setResendEmailCount(0);
+              setState(() {
+                buttonText = "Resend email";
+                isButtonActive = true;
+              });
+            }
           });
         }
       }();

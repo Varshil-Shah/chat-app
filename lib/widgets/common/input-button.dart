@@ -20,7 +20,9 @@ class InputButton extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 7),
       width: isLoading ? null : size.width * 0.9,
       child: isLoading
-          ? const CircularProgressIndicator()
+          ? const CircularProgressIndicator(
+              color: mainColor,
+            )
           : ElevatedButton(
               onPressed: onPressed,
               child: Text(
