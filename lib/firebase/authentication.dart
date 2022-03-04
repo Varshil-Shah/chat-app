@@ -165,6 +165,8 @@ class Authentication {
     return doc[key];
   }
 
+  bool isUserLoggedIn() => _firebaseAuth.currentUser != null;
+
   Future<int> getResendEmailCount() async =>
       (await getUserCredentials('resendEmailCount')) as int;
 

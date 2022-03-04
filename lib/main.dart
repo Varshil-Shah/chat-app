@@ -1,3 +1,4 @@
+import 'package:chat_app/firebase/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(146, 31, 243, 1),
       ),
-      home: const Login(),
+      initialRoute:
+          Authentication().isUserLoggedIn() ? Home.routeName : Login.routeName,
       routes: {
         SignUp.routeName: (ctx) => const SignUp(),
         Login.routeName: (ctx) => const Login(),
