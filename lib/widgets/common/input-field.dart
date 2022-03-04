@@ -15,6 +15,7 @@ class InputField extends StatelessWidget {
     this.textInputType = TextInputType.text,
     this.onFocus = false,
     this.readOnly = false,
+    this.boxConstraints,
     this.suffixIconButton,
     this.horizontalMargin = 20.0,
     this.verticalMargin = 10.0,
@@ -34,6 +35,7 @@ class InputField extends StatelessWidget {
   final Widget? suffixIconButton;
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
+  final BoxConstraints? boxConstraints;
 
   final double horizontalMargin;
   final double verticalMargin;
@@ -57,13 +59,14 @@ class InputField extends StatelessWidget {
       ),
       child: TextField(
         decoration: InputDecoration(
+          constraints: boxConstraints,
           border: InputBorder.none,
           suffix: suffix,
           suffixIcon: suffixIconButton,
           isDense: false,
           hintText: hintText,
           hintStyle: const TextStyle(
-            fontSize: 17.0,
+            fontSize: 18.0,
           ),
           icon: Icon(
             icon,
