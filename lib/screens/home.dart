@@ -1,6 +1,8 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/repository/data-repo.dart';
 import 'package:chat_app/widgets/common/input-field.dart';
 import 'package:chat_app/widgets/home/user-widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -13,6 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _searchTextController = TextEditingController();
+  final dataRepo = DataRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 60,
-        titleSpacing: 0,
+        titleSpacing: -5,
         backgroundColor: Colors.transparent,
         title: InputField(
           controller: _searchTextController,
@@ -34,15 +37,32 @@ class _HomeState extends State<Home> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: ListView.separated(
-        itemBuilder: (ctx, i) => const UserWidget(),
-        separatorBuilder: (ctx, i) => Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Divider(
-            color: Colors.grey[400],
-          ),
-        ),
-        itemCount: 10,
+      body: StreamBuilder(
+        stream: dataRepo.getUsersList(),
+        builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          final document = snapshot.data.docs;
+          return ListView.separated(
+            itemBuilder: (ctx, i) => UserWidget(
+              username: document[i]['username'],
+              imageUrl: document[i]['imageUrl'],
+              time: (document[i]['createdAt'] as Timestamp).toDate(),
+              receiverId: document[i].id,
+            ),
+            separatorBuilder: (ctx, i) => Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Divider(
+                color: Colors.grey[400],
+              ),
+            ),
+            itemCount: document.length,
+          );
+        },
       ),
     );
   }
