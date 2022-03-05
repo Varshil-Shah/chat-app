@@ -26,7 +26,7 @@ class _SignupInputsState extends State<SignupInputs> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool isPasswordVisible = false;
+  bool isPasswordVisible = true;
 
   void _validateForm() {
     if (!VerifyInputs.verifySignUp(

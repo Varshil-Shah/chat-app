@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:chat_app/screens/chat.dart';
 
 class UserWidget extends StatelessWidget {
   final String username;
@@ -58,7 +59,15 @@ class UserWidget extends StatelessWidget {
         ],
       ),
       onTap: () {
-        debugPrint(receiverId);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (ctx) => Chat(
+              imageUrl: imageUrl,
+              username: username,
+              receiverId: receiverId,
+            ),
+          ),
+        );
       },
     );
   }

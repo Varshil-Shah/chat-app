@@ -9,4 +9,11 @@ class DataRepository {
         .snapshots();
     return usersCollection;
   }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> fetchUserData(
+      String uid) async {
+    final userCollection =
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+    return userCollection;
+  }
 }

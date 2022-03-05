@@ -19,7 +19,7 @@ class _LoginInputsState extends State<LoginInputs> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool isLoading = false;
-  bool isPasswordVisible = false;
+  bool isPasswordVisible = true;
 
   void _submitForm() async {
     if (!VerifyInputs.verifyLogin(
