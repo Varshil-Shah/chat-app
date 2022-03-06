@@ -1,5 +1,4 @@
 import 'package:chat_app/firebase/authentication.dart';
-import 'package:chat_app/screens/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -24,6 +23,15 @@ class MyApp extends StatelessWidget {
       title: 'Chat App',
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(146, 31, 243, 1),
+        fontFamily: "Roboto",
+        textTheme: ThemeData().textTheme.copyWith(
+              headline1: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                fontFamily: "RobotoBold",
+                color: Colors.black54,
+              ),
+            ),
       ),
       initialRoute:
           Authentication().isUserLoggedIn() ? Home.routeName : Login.routeName,

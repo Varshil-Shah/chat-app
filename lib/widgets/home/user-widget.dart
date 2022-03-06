@@ -20,37 +20,47 @@ class UserWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       dense: true,
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl),
-        radius: 25,
-      ),
-      title: Text(
-        username,
-        style: const TextStyle(
-          fontSize: 17.0,
-          fontWeight: FontWeight.w500,
-          height: 1,
+      leading: ClipOval(
+        child: Image.network(
+          imageUrl,
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.high,
         ),
       ),
-      subtitle: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            "No message found",
-            style: TextStyle(
-              fontSize: 15.5,
-              fontWeight: FontWeight.w400,
-              height: 0.5,
-              fontStyle: FontStyle.italic,
-            ),
+      title: Container(
+        margin: const EdgeInsets.only(bottom: 2),
+        child: Text(
+          username,
+          style: const TextStyle(
+            fontSize: 17.0,
+            fontWeight: FontWeight.w500,
+            height: 1,
           ),
+        ),
+      ),
+      subtitle: const Text(
+        "No message found yet!\nPlease send any message",
+        style: TextStyle(
+          fontSize: 15.5,
+          fontWeight: FontWeight.w400,
+          fontStyle: FontStyle.italic,
+        ),
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const SizedBox(height: 10),
           Container(
             margin: const EdgeInsets.only(right: 5),
             child: const Text(
               "16.54",
               style: TextStyle(
-                fontSize: 15.5,
+                fontSize: 13,
                 fontWeight: FontWeight.w400,
                 height: 0.5,
               ),

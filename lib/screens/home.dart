@@ -1,5 +1,7 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/firebase/authentication.dart';
 import 'package:chat_app/repository/data-repo.dart';
+import 'package:chat_app/screens/login.dart';
 import 'package:chat_app/widgets/common/input-field.dart';
 import 'package:chat_app/widgets/home/user-widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final auth = Authentication();
   final _searchTextController = TextEditingController();
   final dataRepo = DataRepository();
 
@@ -22,20 +25,33 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        toolbarHeight: 60,
-        titleSpacing: -5,
         backgroundColor: Colors.transparent,
-        title: InputField(
-          controller: _searchTextController,
-          hintText: "Search user",
-          icon: Icons.search,
-          boxConstraints: const BoxConstraints(minHeight: 40, maxHeight: 40),
-          suffixIconButton: IconButton(
-            icon: const Icon(Icons.close, color: mainColor),
+        titleSpacing: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.black54,
+            size: 26.0,
+          ),
+          onPressed: () {
+            auth.signOut();
+            Navigator.of(context).pushReplacementNamed(Login.routeName);
+          },
+        ),
+        title: Text(
+          "MESSAGES",
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.search_outlined,
+              color: Colors.black54,
+              size: 26.0,
+            ),
             onPressed: () {},
           ),
-        ),
-        automaticallyImplyLeading: false,
+        ],
       ),
       body: StreamBuilder(
         stream: dataRepo.getUsersList(),

@@ -129,6 +129,10 @@ class Authentication {
     return AuthenticationResult(userCredential: userCreds, error: error);
   }
 
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
+
   Future<void> sendEmailVerification(User? user) async {
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
