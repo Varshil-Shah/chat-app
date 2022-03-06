@@ -31,6 +31,17 @@ class MyApp extends StatelessWidget {
                 fontFamily: "RobotoBold",
                 color: Colors.black54,
               ),
+              headline2: const TextStyle(
+                fontFamily: "Roboto",
+                fontSize: 18,
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
+              headline3: const TextStyle(
+                fontFamily: "Roboto",
+                fontSize: 14,
+                color: Colors.black54,
+              ),
             ),
       ),
       initialRoute:

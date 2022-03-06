@@ -1,7 +1,9 @@
+import 'package:chat_app/repository/data-repo.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/screens/chat.dart';
 
 class UserWidget extends StatelessWidget {
+  final dataRepo = DataRepository();
   final String username;
   final String imageUrl;
   final DateTime time;
@@ -78,7 +80,7 @@ class UserWidget extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () {
+      onTap: () async {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (ctx) => Chat(

@@ -1,6 +1,6 @@
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/repository/data-repo.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app/repository/data-repo.dart';
+import 'package:chat_app/widgets/chat/new-message.dart';
 
 class Chat extends StatelessWidget {
   static const routeName = '/chat';
@@ -20,31 +20,36 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        elevation: 0,
-        backgroundColor: mainColor,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: CircleAvatar(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          titleSpacing: -8,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.black54),
+          backgroundColor: Colors.grey.withOpacity(0.1),
+          title: Row(
+            children: [
+              CircleAvatar(
                 backgroundImage: NetworkImage(imageUrl),
-                radius: 25,
+                radius: 23,
               ),
-            ),
-            const SizedBox(width: 10),
-            Text(username),
-          ],
+              const SizedBox(width: 10),
+              Text(
+                username,
+                style: Theme.of(context).textTheme.headline2,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(),
+          ),
+          const NewMessage(),
+        ],
       ),
     );
   }

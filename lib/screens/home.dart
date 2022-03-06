@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
           },
         ),
         title: Text(
-          "MESSAGES",
+          "CONVERSATIONS",
           style: Theme.of(context).textTheme.headline1,
         ),
         actions: [
@@ -59,11 +59,12 @@ class _HomeState extends State<Home> {
         builder: (BuildContext ctx, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ListView.separated(
-                itemBuilder: (ctx, i) => const UserSkeleton(),
-                separatorBuilder: (ctx, i) => const SizedBox(
-                      height: 20.0,
-                    ),
-                itemCount: 10);
+              itemBuilder: (ctx, i) => const UserSkeleton(),
+              separatorBuilder: (ctx, i) => const SizedBox(
+                height: 20.0,
+              ),
+              itemCount: 10,
+            );
           }
 
           final document = snapshot.data.docs;
