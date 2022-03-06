@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:chat_app/firebase/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/model/message.dart';
 
 class DataRepository {
+  final auth = Authentication();
+
   Stream<QuerySnapshot> getUsersList() {
     final usersCollection = FirebaseFirestore.instance
         .collection("users")
@@ -23,19 +25,43 @@ class DataRepository {
     return FirebaseFirestore.instance.collection("users").doc(id).get();
   }
 
+  Future<void> sendMessagePath(
+    String senderId,
+    String receiverId,
+    String documentId,
+  ) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(senderId)
+        .collection("recipients")
+        .doc(receiverId)
+        .collection("messages")
+        .doc(documentId)
+        .set({
+      "createdAt": Timestamp.now(),
+    });
+  }
+
   Future<void> sendNewMessage(String receiverId, Message newMessage) async {
-    /*
-      Steps:
-      1. get receiver user id
-      2. create message collection, create new document and store its id,
-      3. take new msg id and store them in both the users recipients.
-    */
-    final documentId =
+    final document =
         await FirebaseFirestore.instance.collection("messages").add({
       "createdAt": newMessage.createdAt,
       "message": newMessage.message,
       "senderId": newMessage.senderId,
     });
-    debugPrint("DOCUMENT: ${newMessage.senderId}");
+
+    // for receiver
+    await sendMessagePath(
+      receiverId,
+      auth.currentUser!.uid,
+      document.id,
+    );
+
+    // for sender
+    await sendMessagePath(
+      auth.currentUser!.uid,
+      receiverId,
+      document.id,
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:chat_app/constants.dart';
 import 'package:chat_app/firebase/authentication.dart';
 import 'package:chat_app/model/message.dart';
 import 'package:chat_app/repository/data-repo.dart';
+import 'package:chat_app/widgets/common/verify-fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -14,20 +15,32 @@ class NewMessage extends StatefulWidget {
 }
 
 class _NewMessageState extends State<NewMessage> {
+  final textController = TextEditingController();
   final auth = Authentication();
   final dataRepo = DataRepository();
-  final textController = TextEditingController();
 
   void sendMessage() async {
+    FocusScope.of(context).unfocus();
+    if (textController.text.isEmpty) {
+      VerifyInputs.showSnackbar("please enter a message", context);
+      return;
+    }
+    final message = textController.text;
+    textController.text = '';
     await dataRepo.sendNewMessage(
       widget.receiverId,
       Message(
         createdAt: Timestamp.now(),
-        message: textController.text,
+        message: message,
         senderId: auth.currentUser!.uid,
       ),
     );
-    textController.text = '';
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -36,7 +49,7 @@ class _NewMessageState extends State<NewMessage> {
       width: double.infinity,
       padding: const EdgeInsets.only(bottom: 3, top: 3, left: 15, right: 15),
       decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 226, 224, 224),
+        color: Color.fromARGB(255, 236, 235, 235),
       ),
       child: Row(
         children: [
@@ -62,7 +75,7 @@ class _NewMessageState extends State<NewMessage> {
                 color: Colors.black54,
                 size: 28,
               ),
-              onPressed: textController.text.isEmpty ? null : sendMessage,
+              onPressed: sendMessage,
               alignment: Alignment.center,
             ),
           )
