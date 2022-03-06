@@ -29,6 +29,16 @@ class UserWidget extends StatelessWidget {
           height: 50,
           fit: BoxFit.cover,
           filterQuality: FilterQuality.high,
+          loadingBuilder: (BuildContext ctx, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) return child;
+            return CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            );
+          },
         ),
       ),
       title: Container(

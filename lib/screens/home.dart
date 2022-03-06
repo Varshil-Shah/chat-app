@@ -4,6 +4,7 @@ import 'package:chat_app/repository/data-repo.dart';
 import 'package:chat_app/screens/login.dart';
 import 'package:chat_app/widgets/common/input-field.dart';
 import 'package:chat_app/widgets/home/user-widget.dart';
+import 'package:chat_app/widgets/skeleton/user-skeleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -57,9 +58,12 @@ class _HomeState extends State<Home> {
         stream: dataRepo.getUsersList(),
         builder: (BuildContext ctx, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return ListView.separated(
+                itemBuilder: (ctx, i) => const UserSkeleton(),
+                separatorBuilder: (ctx, i) => const SizedBox(
+                      height: 20.0,
+                    ),
+                itemCount: 10);
           }
 
           final document = snapshot.data.docs;
