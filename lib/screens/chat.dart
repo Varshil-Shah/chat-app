@@ -48,7 +48,9 @@ class Chat extends StatelessWidget {
           Expanded(
             child: Container(),
           ),
-          const NewMessage(),
+          NewMessage(
+            receiverId: receiverId,
+          )
         ],
       ),
     );

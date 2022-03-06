@@ -1,15 +1,34 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/firebase/authentication.dart';
+import 'package:chat_app/model/message.dart';
+import 'package:chat_app/repository/data-repo.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({Key? key}) : super(key: key);
+  final String receiverId;
+  const NewMessage({Key? key, required this.receiverId}) : super(key: key);
 
   @override
   State<NewMessage> createState() => _NewMessageState();
 }
 
 class _NewMessageState extends State<NewMessage> {
+  final auth = Authentication();
+  final dataRepo = DataRepository();
   final textController = TextEditingController();
+
+  void sendMessage() async {
+    await dataRepo.sendNewMessage(
+      widget.receiverId,
+      Message(
+        createdAt: Timestamp.now(),
+        message: textController.text,
+        senderId: auth.currentUser!.uid,
+      ),
+    );
+    textController.text = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +62,7 @@ class _NewMessageState extends State<NewMessage> {
                 color: Colors.black54,
                 size: 28,
               ),
-              onPressed: textController.text.isEmpty ? null : () {},
+              onPressed: textController.text.isEmpty ? null : sendMessage,
               alignment: Alignment.center,
             ),
           )
