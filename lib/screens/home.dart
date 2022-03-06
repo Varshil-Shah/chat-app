@@ -72,7 +72,6 @@ class _HomeState extends State<Home> {
             itemBuilder: (ctx, i) => UserWidget(
               username: document[i]['username'],
               imageUrl: document[i]['imageUrl'],
-              time: (document[i]['createdAt'] as Timestamp).toDate(),
               receiverId: document[i].id,
             ),
             separatorBuilder: (ctx, i) => Container(

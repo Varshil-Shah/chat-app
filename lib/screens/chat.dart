@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/skeleton/chat-skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/repository/data-repo.dart';
 import 'package:chat_app/widgets/chat/new-message.dart';
@@ -46,7 +47,11 @@ class Chat extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: Container(),
+            child: ListView.separated(
+              itemBuilder: (ctx, i) => ChatSkeleton(isMe: i % 2 == 0),
+              separatorBuilder: (ctx, i) => const SizedBox(height: 10),
+              itemCount: 10,
+            ),
           ),
           NewMessage(
             receiverId: receiverId,

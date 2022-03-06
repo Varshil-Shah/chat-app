@@ -6,7 +6,6 @@ class UserWidget extends StatelessWidget {
   final dataRepo = DataRepository();
   final String username;
   final String imageUrl;
-  final DateTime time;
   final String receiverId;
   String? lastMessage;
 
@@ -14,7 +13,6 @@ class UserWidget extends StatelessWidget {
     Key? key,
     required this.username,
     required this.imageUrl,
-    required this.time,
     required this.receiverId,
     this.lastMessage,
   }) : super(key: key);
