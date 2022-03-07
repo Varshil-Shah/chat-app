@@ -6,15 +6,15 @@ import 'package:chat_app/widgets/common/verify-fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class NewMessage extends StatefulWidget {
+class MessageBox extends StatefulWidget {
   final String receiverId;
-  const NewMessage({Key? key, required this.receiverId}) : super(key: key);
+  const MessageBox({Key? key, required this.receiverId}) : super(key: key);
 
   @override
-  State<NewMessage> createState() => _NewMessageState();
+  State<MessageBox> createState() => _MessageBoxState();
 }
 
-class _NewMessageState extends State<NewMessage> {
+class _MessageBoxState extends State<MessageBox> {
   final textController = TextEditingController();
   final auth = Authentication();
   final dataRepo = DataRepository();
@@ -27,7 +27,7 @@ class _NewMessageState extends State<NewMessage> {
     }
     final message = textController.text;
     textController.text = '';
-    await dataRepo.sendNewMessage(
+    await dataRepo.addMessage(
       widget.receiverId,
       Message(
         createdAt: Timestamp.now(),

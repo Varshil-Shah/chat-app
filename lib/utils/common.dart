@@ -1,6 +1,7 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+import 'dart:io' show File;
+import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
+import 'package:path_provider/path_provider.dart' show getTemporaryDirectory;
+import 'package:path/path.dart' show join;
 import 'package:http/http.dart' as http;
 
 Future<File> fileFromImageUrl() async {
@@ -29,4 +30,10 @@ String maskEmail(String email) {
   splits[1] = domainParts.join(".");
 
   return splits.join("@");
+}
+
+int compareCreatedAts(dynamic a, dynamic b) {
+  final first = a['createdAt'] as Timestamp;
+  final second = b['createdAt'] as Timestamp;
+  return first.compareTo(second);
 }

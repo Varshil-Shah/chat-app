@@ -52,9 +52,9 @@ class UserWidget extends StatelessWidget {
           ),
         ),
       ),
-      subtitle: const Text(
-        "No message found yet!\nPlease send any message",
-        style: TextStyle(
+      subtitle: Text(
+        "",
+        style: const TextStyle(
           fontSize: 15.5,
           fontWeight: FontWeight.w400,
           fontStyle: FontStyle.italic,

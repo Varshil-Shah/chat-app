@@ -1,12 +1,11 @@
-import 'package:chat_app/constants.dart';
+import 'package:flutter/material.dart';
+
 import 'package:chat_app/firebase/authentication.dart';
 import 'package:chat_app/repository/data-repo.dart';
 import 'package:chat_app/screens/login.dart';
-import 'package:chat_app/widgets/common/input-field.dart';
+
 import 'package:chat_app/widgets/home/user-widget.dart';
 import 'package:chat_app/widgets/skeleton/user-skeleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -68,6 +67,7 @@ class _HomeState extends State<Home> {
           }
 
           final document = snapshot.data.docs;
+
           return ListView.separated(
             itemBuilder: (ctx, i) => UserWidget(
               username: document[i]['username'],
