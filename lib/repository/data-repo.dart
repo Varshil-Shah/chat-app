@@ -103,4 +103,14 @@ class DataRepository {
 
     return Future.wait(messages);
   }
+
+  Future<void> updateLastMessageAndTime(String message, Timestamp time) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .update({
+      "lastMessage": message,
+      "lastMessageTime": time,
+    });
+  }
 }

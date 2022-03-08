@@ -66,6 +66,8 @@ class Authentication {
     data['imageUrl'] = imageUrl;
     data['resendEmailCount'] = 0;
     data['nextResendEmailTime'] = null;
+    data['lastMessage'] = "No message found yet";
+    data['lastMessageTime'] = null;
     if (values != null) data.addAll(values);
 
     _firebaseFirestore

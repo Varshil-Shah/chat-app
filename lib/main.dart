@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "Roboto",
         textTheme: ThemeData().textTheme.copyWith(
               headline1: const TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w700,
                 fontFamily: "RobotoBold",
                 color: Colors.black54,

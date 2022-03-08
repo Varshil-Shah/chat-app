@@ -1,11 +1,10 @@
 import 'package:chat_app/firebase/utils.dart';
-import 'package:chat_app/model/message.dart';
 import 'package:chat_app/utils/common.dart';
 import 'package:chat_app/widgets/skeleton/chat-skeleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/repository/data-repo.dart';
-import 'package:chat_app/widgets/chat/new-message.dart';
+import 'package:chat_app/widgets/chat/message-box.dart';
 
 class Chat extends StatefulWidget {
   static const routeName = '/chat';
@@ -14,7 +13,7 @@ class Chat extends StatefulWidget {
   final String imageUrl;
   final String username;
 
-  Chat({
+  const Chat({
     Key? key,
     required this.receiverId,
     required this.imageUrl,

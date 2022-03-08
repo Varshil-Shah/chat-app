@@ -17,12 +17,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final auth = Authentication();
-  final _searchTextController = TextEditingController();
   final dataRepo = DataRepository();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -68,17 +68,14 @@ class _HomeState extends State<Home> {
 
           final document = snapshot.data.docs;
 
-          return ListView.separated(
+          return ListView.builder(
+            shrinkWrap: true,
             itemBuilder: (ctx, i) => UserWidget(
               username: document[i]['username'],
               imageUrl: document[i]['imageUrl'],
               receiverId: document[i].id,
-            ),
-            separatorBuilder: (ctx, i) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Divider(
-                color: Colors.grey[400],
-              ),
+              lastMessage: document[i]['lastMessage'],
+              lastMessageTime: document[i]['lastMessageTime'],
             ),
             itemCount: document.length,
           );

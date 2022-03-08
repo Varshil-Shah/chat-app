@@ -26,15 +26,17 @@ class _MessageBoxState extends State<MessageBox> {
       return;
     }
     final message = textController.text;
+    final createdAtTime = Timestamp.now();
     textController.text = '';
     await dataRepo.addMessage(
       widget.receiverId,
       Message(
-        createdAt: Timestamp.now(),
+        createdAt: createdAtTime,
         message: message,
         senderId: auth.currentUser!.uid,
       ),
     );
+    await dataRepo.updateLastMessageAndTime(message, createdAtTime);
   }
 
   @override

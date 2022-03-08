@@ -21,6 +21,7 @@ class InputField extends StatelessWidget {
     this.verticalMargin = 10.0,
     this.horizontalPadding = 10.0,
     this.verticalPadding = 3.0,
+    this.backgroundColor,
   }) : super(key: key);
 
   final TextInputType textInputType;
@@ -35,6 +36,7 @@ class InputField extends StatelessWidget {
   final Widget? suffixIconButton;
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
+  final Color? backgroundColor;
   final BoxConstraints? boxConstraints;
 
   final double horizontalMargin;
@@ -55,7 +57,7 @@ class InputField extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
-        color: purpleMaterialColor[200],
+        color: backgroundColor ?? purpleMaterialColor[200],
       ),
       child: TextField(
         decoration: InputDecoration(
