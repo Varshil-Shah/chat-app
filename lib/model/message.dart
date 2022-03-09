@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
-  late final String? id;
+  String? id;
   final String message;
   final Timestamp createdAt;
   final String senderId;

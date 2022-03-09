@@ -24,7 +24,7 @@ class DataRepository {
     return userCollection;
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getParticularField(String id) {
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails(String id) {
     return FirebaseFirestore.instance.collection("users").doc(id).get();
   }
 

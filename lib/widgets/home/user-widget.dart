@@ -1,4 +1,5 @@
 import 'package:chat_app/repository/data-repo.dart';
+import 'package:chat_app/utils/common.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/screens/chat.dart';
@@ -19,38 +20,6 @@ class UserWidget extends StatelessWidget {
     required this.lastMessage,
     this.lastMessageTime,
   }) : super(key: key);
-
-  String? get time {
-    if (lastMessageTime != null) {
-      final dateTime = lastMessageTime?.toDate();
-      final time = "${dateTime?.hour} : ${dateTime?.minute}";
-      return time;
-    }
-    return null;
-  }
-
-  int calculateDifference(DateTime date) {
-    DateTime now = DateTime.now();
-    return DateTime(date.year, date.month, date.day)
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays;
-  }
-
-  String? get date {
-    if (lastMessageTime != null) {
-      final dateTime = lastMessageTime?.toDate();
-      if (calculateDifference(dateTime!) == 0) {
-        return "Today";
-      } else if (calculateDifference(dateTime) == -1) {
-        return "Yesterday";
-      } else {
-        final date =
-            "${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year.toString()}";
-        return date;
-      }
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,26 +74,36 @@ class UserWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         trailing: Container(
-          margin: const EdgeInsets.only(top: 5),
+          margin: const EdgeInsets.only(top: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                date != null ? date.toString() : '',
+                lastMessageTime != null
+                    ? date(lastMessageTime!).toString()
+                    : '',
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 15,
                   fontWeight: FontWeight.w400,
                   fontStyle: FontStyle.italic,
                   height: 0.5,
+                  color: Colors.black54,
                 ),
               ),
-              Text(
-                time != null ? time.toString() : '',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                  height: 0.5,
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  lastMessageTime != null
+                      ? time(lastMessageTime!).toString()
+                      : '',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w400,
+                    height: 0.5,
+                    color: Colors.black54,
+                  ),
                 ),
               ),
             ],

@@ -1,5 +1,8 @@
+import 'package:chat_app/firebase/authentication.dart';
 import 'package:chat_app/firebase/utils.dart';
+import 'package:chat_app/model/message.dart';
 import 'package:chat_app/utils/common.dart';
+import 'package:chat_app/widgets/chat/message-bubble.dart';
 import 'package:chat_app/widgets/skeleton/chat-skeleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -25,18 +28,20 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  final dataRepo = DataRepository();
+  final _dataRepo = DataRepository();
+  final auth = Authentication();
+  bool _isInitialLoad = true;
+
+  final Widget loadingSkeleton = Expanded(
+    child: ListView.separated(
+      itemBuilder: (ctx, i) => ChatSkeleton(isMe: i % 2 == 0),
+      separatorBuilder: (ctx, i) => const SizedBox(height: 10),
+      itemCount: 10,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final Widget loadingSkeleton = Expanded(
-      child: ListView.separated(
-        itemBuilder: (ctx, i) => ChatSkeleton(isMe: i % 2 == 0),
-        separatorBuilder: (ctx, i) => const SizedBox(height: 10),
-        itemCount: 10,
-      ),
-    );
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -64,7 +69,7 @@ class _ChatState extends State<Chat> {
       body: Column(
         children: [
           StreamBuilder<JsonQuerySnapshot>(
-            stream: dataRepo.fetchAllMessageIdsAsStream(widget.receiverId),
+            stream: _dataRepo.fetchAllMessageIdsAsStream(widget.receiverId),
             builder:
                 (BuildContext ctx, AsyncSnapshot<JsonQuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -73,7 +78,8 @@ class _ChatState extends State<Chat> {
                 );
               }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  _isInitialLoad) {
                 return loadingSkeleton;
               }
 
@@ -85,33 +91,52 @@ class _ChatState extends State<Chat> {
                 });
               }
 
-              documentIds.sort(compareCreatedAts);
+              documentIds.sort(compareMapsByCreatedAt);
 
-              return FutureBuilder<List<JsonQuerySnapshot>>(
-                future: dataRepo.fetchMessagesFromList(documentIds),
+              final futures = Future.wait([
+                _dataRepo.fetchMessagesFromList(documentIds),
+                _dataRepo.getUserDetails(auth.currentUser!.uid)
+              ]);
+              return FutureBuilder<List<Object>>(
+                future: futures,
                 builder: (
                   BuildContext context,
-                  AsyncSnapshot<List<JsonQuerySnapshot>> messagesSnapshot,
+                  AsyncSnapshot<List<Object>> snapshots,
                 ) {
-                  if (messagesSnapshot.connectionState ==
-                      ConnectionState.waiting) {
+                  if (snapshots.connectionState == ConnectionState.waiting &&
+                      _isInitialLoad) {
+                    _isInitialLoad = false;
                     return loadingSkeleton;
                   }
-                  final messages = <JsonQueryDocumentSnapshot>[];
-                  messagesSnapshot.data?.forEach((element) {
-                    messages.addAll(element.docs);
-                  });
-                  messages.sort(compareCreatedAts);
+
+                  final myUsername = (snapshots.data![1]
+                      as DocumentSnapshot<Map<String, dynamic>>)['username'];
+
+                  final messagesSnapshots =
+                      snapshots.data?[0] as List<JsonQuerySnapshot>;
+
+                  final messages = <Message>[];
+
+                  for (final messagesSnapshot in messagesSnapshots) {
+                    for (final message in messagesSnapshot.docs) {
+                      messages.add(Message.fromSnapshot(message));
+                    }
+                  }
+                  messages.sort(compareMessagesByCreatedAt);
 
                   return Expanded(
-                    child: ListView.separated(
+                    child: ListView.builder(
+                      reverse: true,
                       itemBuilder: (ctx, i) {
-                        return ChatSkeleton(
-                          isMe: i % 2 == 0,
-                          text: messages[i]["message"],
+                        final isMe =
+                            messages[i].senderId == auth.currentUser!.uid;
+                        return MessageBubble(
+                          isMe: isMe,
+                          message: messages[i].message,
+                          timestamp: messages[i].createdAt,
+                          sender: isMe ? myUsername : widget.username,
                         );
                       },
-                      separatorBuilder: (ctx, i) => const SizedBox(height: 10),
                       itemCount: messages.length,
                     ),
                   );

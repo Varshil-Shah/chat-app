@@ -15,19 +15,14 @@ class MessageBox extends StatefulWidget {
 }
 
 class _MessageBoxState extends State<MessageBox> {
-  final textController = TextEditingController();
   final auth = Authentication();
   final dataRepo = DataRepository();
+  String message = '';
 
   void sendMessage() async {
     FocusScope.of(context).unfocus();
-    if (textController.text.isEmpty) {
-      VerifyInputs.showSnackbar("please enter a message", context);
-      return;
-    }
-    final message = textController.text;
+    if (message.isEmpty) return;
     final createdAtTime = Timestamp.now();
-    textController.text = '';
     await dataRepo.addMessage(
       widget.receiverId,
       Message(
@@ -40,18 +35,13 @@ class _MessageBoxState extends State<MessageBox> {
   }
 
   @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(bottom: 3, top: 3, left: 15, right: 15),
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 236, 235, 235),
+      margin: const EdgeInsets.only(top: 3),
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.1),
       ),
       child: Row(
         children: [
@@ -63,19 +53,29 @@ class _MessageBoxState extends State<MessageBox> {
               ),
               style: const TextStyle(fontSize: 18),
               cursorColor: mainColor,
-              controller: textController,
               autocorrect: true,
               minLines: 1,
               maxLines: 3,
+              onChanged: (value) {
+                setState(() {
+                  message = value;
+                });
+              },
             ),
           ),
           Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
             margin: const EdgeInsets.all(5),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.send_rounded,
-                color: Colors.black54,
-                size: 28,
+                color: message.isEmpty ? Colors.black26 : Colors.black54,
+                size: 32,
               ),
               onPressed: sendMessage,
               alignment: Alignment.center,
